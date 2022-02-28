@@ -3,7 +3,8 @@ data "tfe_outputs" "infrastructure" {
   workspace    = "infrastructure_${var.env}"
 }
 resource "aws_rds_cluster" "postgresql" {
-  database_name        = "${var.env}-${var.service}-postgresql"
+  cluster_identifier   = "${var.env}-${var.service}-psql"
+  database_name        = "mydb"
   engine               = "aurora-postgresql"
   db_subnet_group_name = data.tfe_outputs.infrastructure.values.db_subnet_group_name
   availability_zones   = ["us-east-1a", "us-east-1b"]
