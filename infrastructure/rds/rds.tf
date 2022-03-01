@@ -13,7 +13,7 @@ resource "aws_security_group" "postgresql" {
 resource "aws_db_instance" "postgresql" {
   identifier             = "${var.env}-${var.service}-psql"
   db_name                = "mydb"
-  engine                 = "postgresql"
+  engine                 = "postgres"
   instance_class         = "db.t3.small"
   allocated_storage      = 5
   vpc_security_group_ids = [aws_security_group.postgresql.id]
