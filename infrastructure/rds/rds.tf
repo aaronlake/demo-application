@@ -15,6 +15,7 @@ resource "aws_db_instance" "postgresql" {
   db_name                = "mydb"
   engine                 = "postgresql"
   instance_class         = "db.t3.small"
+  allocated_storage      = 5
   vpc_security_group_ids = [aws_security_group.postgresql.id]
   db_subnet_group_name   = var.db_subnet_group_name
   availability_zone      = "us-east-1a"
