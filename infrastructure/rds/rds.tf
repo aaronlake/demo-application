@@ -1,18 +1,28 @@
-data "tfe_outputs" "infrastructure" {
-  organization = "Unicorp"
-  workspace    = "infrastructure_${var.env}"
+resource "aws_security_group" "postgresql" {
+  name   = "postgresql-private-sg"
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = var.private_subnets_cidr_blocks
+  }
 }
-resource "aws_rds_cluster" "postgresql" {
-  cluster_identifier   = "${var.env}-${var.service}-psql"
-  database_name        = "mydb"
-  engine               = "aurora-postgresql"
-  db_subnet_group_name = data.tfe_outputs.infrastructure.values.db_subnet_group_name
-  availability_zones   = ["us-east-1a", "us-east-1b"]
-  master_username      = var.master_username
-  master_password      = var.master_password
+
+resource "aws_db_instance" "postgresql" {
+  identifier             = "${var.env}-${var.service}-psql"
+  db_name                = "mydb"
+  engine                 = "postgresql"
+  instance_class         = "db.t3.small"
+  vpc_security_group_ids = [aws_security_group.postgresql.id]
+  db_subnet_group_name   = var.db_subnet_group_name
+  availability_zone      = "us-east-1a"
+
+  username = var.master_username
+  password = var.master_password
 
   backup_retention_period = 5
-  preferred_backup_window = "05:00-07:00"
   skip_final_snapshot     = true
 
   tags = merge(local.common_tags, {
@@ -24,3 +34,18 @@ resource "aws_rds_cluster" "postgresql" {
     ttl     = -1
   })
 }
+
+# resource "vault_mount" "db" {
+#   path = "postgres"
+#   type = "database"
+# }
+
+# resource "vault_database_secret_backend_connection" "postgres" {
+#   backend       = vault_mount.db.path
+#   name          = aws_db_instance.postgresql.cluster_identifier
+#   allowed_roles = ["*"]
+
+#   postgresql {
+#     connection_url = "postgresql://${var.master_username}:${var.master_password}@${aws_rds_cluster.postgresql.endpoint}/${aws_rds_cluster.postgresql.database_name}"
+#   }
+# }

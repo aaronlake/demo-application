@@ -24,3 +24,13 @@ variable "master_password" {
   description = "The master password for the DB instance."
   type        = string
 }
+
+variable "login_approle_role_id" {
+  description = "The Vault login approle role."
+  type        = string
+}
+
+variable "login_approle_secret_id" {
+  description = "The Vault login approle secret id."
+  type        = string
+}

@@ -3,6 +3,11 @@ variable "env" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "The VPC to deploy to"
+  type        = string
+}
+
 variable "master_username" {
   description = "The master username for the DB instance."
   type        = string
@@ -11,6 +16,16 @@ variable "master_username" {
 variable "master_password" {
   description = "The master password for the DB instance."
   type        = string
+}
+
+variable "db_subnet_group_name" {
+  description = "The name of the DB subnet group to use."
+  type        = string
+}
+
+variable "private_subnets_cidr_blocks" {
+  description = "The private subnets CIDR blocks to use."
+  type        = list(string)
 }
 
 # Required Tags
