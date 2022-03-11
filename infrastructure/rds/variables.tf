@@ -28,6 +28,20 @@ variable "private_subnets_cidr_blocks" {
   type        = list(string)
 }
 
+variable "entities" {
+  description = "A set of vault clients to create"
+  default = [
+    "userbob",
+    "userapp"
+  ]
+}
+
+variable "postgres_ttl" {
+  description = "Hours before the resource expires. *Use -1 for indefinite.*"
+  type        = number
+  default     = 60
+}
+
 # Required Tags
 ########################
 
@@ -66,6 +80,4 @@ variable "pii" {
 variable "ttl" {
   description = "Hours before the resource expires. *Use -1 for indefinite.*"
   type        = string
-  default     = "168"
 }
-

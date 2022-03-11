@@ -36,17 +36,40 @@ resource "aws_db_instance" "postgresql" {
   })
 }
 
-# resource "vault_mount" "db" {
-#   path = "postgres"
-#   type = "database"
-# }
+resource "vault_mount" "db" {
+  path = "postgres"
+  type = "database"
+}
 
-# resource "vault_database_secret_backend_connection" "postgres" {
-#   backend       = vault_mount.db.path
-#   name          = aws_db_instance.postgresql.cluster_identifier
-#   allowed_roles = ["*"]
+resource "vault_database_secret_backend_connection" "postgres" {
+  backend       = vault_mount.db.path
+  name          = aws_db_instance.postgresql.name
+  allowed_roles = ["*"]
 
-#   postgresql {
-#     connection_url = "postgresql://${var.master_username}:${var.master_password}@${aws_rds_cluster.postgresql.endpoint}/${aws_rds_cluster.postgresql.database_name}"
-#   }
-# }
+  postgresql {
+    connection_url = "postgresql://${var.master_username}:${var.master_password}@${aws_db_instance.postgresql.endpoint}/${aws_db_instance.postgresql.db_name}"
+  }
+}
+
+resource "vault_database_secret_backend_role" "role" {
+  for_each = toset(var.entities)
+  backend  = vault_mount.db.path
+  name     = each.key
+  db_name  = vault_database_secret_backend_connection.postgres.name
+  creation_statements = [
+    "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
+    "GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";"
+  ]
+  revocation_statements = ["ALTER ROLE \"{{name}}\" NOLOGIN;"]
+  default_ttl           = var.postgres_ttl
+  max_ttl               = 300
+}
+
+resource "vault_database_secret_backend_static_role" "infosec_static_role" {
+  backend             = vault_mount.db.path
+  name                = "INFOSEC-static-postgres"
+  db_name             = vault_database_secret_backend_connection.postgres.name
+  username            = "infosec"
+  rotation_period     = "360"
+  rotation_statements = ["ALTER USER \"{{name}}\" WITH PASSWORD '{{password}}';"]
+}

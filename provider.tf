@@ -10,10 +10,10 @@ terraform {
       version = "~> 0.22.0"
     }
 
-    # vault = {
-    #   source  = "hashicorp/vault"
-    #   version = "3.3.1"
-    # }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "3.3.1"
+    }
   }
 }
 
@@ -30,15 +30,11 @@ provider "hcp" {
   client_secret = var.hcp_client_secret
 }
 
-# provider "vault" {
-#   address = data.tfe_outputs.infrastructure.values.vault_public_endpoint_url
+provider "vault" {
+  address = data.tfe_outputs.infrastructure.values.vault_public_endpoint_url
 
-#   auth_login {
-#     path = "auth/approle/login"
-
-#     parameters = {
-#       role_id   = var.login_approle_role_id
-#       secret_id = var.login_approle_secret_id
-#     }
-#   }
-# }
+  # auth_login {
+  #   namespace = "admin"
+  #   path      = "auth/userpass/login/${var.login_approle_role_id}"
+  # }
+}
