@@ -31,8 +31,8 @@ variable "private_subnets_cidr_blocks" {
 variable "entities" {
   description = "A set of vault clients to create"
   default = [
-    "userbob",
-    "userapp"
+    "user",
+    "application"
   ]
 }
 
