@@ -49,6 +49,8 @@ resource "vault_database_secret_backend_connection" "postgres" {
   postgresql {
     connection_url = "postgresql://${var.master_username}:${var.master_password}@${aws_db_instance.postgresql.endpoint}/${aws_db_instance.postgresql.db_name}"
   }
+
+  depends_on = [aws_db_instance.postgresql]
 }
 
 resource "vault_database_secret_backend_role" "role" {
