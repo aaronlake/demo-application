@@ -12,6 +12,7 @@ module "rds" {
   db_subnet_group_name        = data.tfe_outputs.infrastructure.values.db_subnet_group_name
   vpc_id                      = data.tfe_outputs.infrastructure.values.vpc_id
   private_subnets_cidr_blocks = data.tfe_outputs.infrastructure.values.private_subnets_cidr_blocks
+  hvn_cidr_block              = data.tfe_outputs.infrastructure.values.hvn_cidr_block
 
   owner   = "dba"
   budget  = "product"

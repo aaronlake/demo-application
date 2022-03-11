@@ -8,6 +8,13 @@ resource "aws_security_group" "postgresql" {
     protocol    = "tcp"
     cidr_blocks = var.private_subnets_cidr_blocks
   }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [var.hvn_cidr_block]
+  }
 }
 
 resource "aws_db_instance" "postgresql" {

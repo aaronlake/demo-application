@@ -42,6 +42,11 @@ variable "postgres_ttl" {
   default     = 60
 }
 
+variable "hvn_cidr_block" {
+  description = "The CIDR block to use for the HVN network."
+  type        = string
+}
+
 # Required Tags
 ########################
 
