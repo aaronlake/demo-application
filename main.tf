@@ -4,11 +4,14 @@ data "tfe_outputs" "infrastructure" {
 }
 
 module "rds" {
-  source = "./infrastructure/rds"
+  source  = "app.terraform.io/Unicorp/rds/aws"
+  version = "1.0.0"
 
   env                         = var.env
   master_username             = var.master_username
   master_password             = var.master_password
+  engine                      = "postgres"
+  instance_class              = "db.t3.small"
   db_subnet_group_name        = data.tfe_outputs.infrastructure.values.db_subnet_group_name
   vpc_id                      = data.tfe_outputs.infrastructure.values.vpc_id
   private_subnets_cidr_blocks = data.tfe_outputs.infrastructure.values.private_subnets_cidr_blocks
