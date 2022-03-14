@@ -1,6 +1,6 @@
 data "tfe_outputs" "infrastructure" {
   organization = "Unicorp"
-  workspace    = "infrastructure_${var.env}"
+  workspace    = "demo-aws-infra-hcp"
 }
 
 module "rds" {

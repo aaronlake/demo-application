@@ -3,7 +3,7 @@ terraform {
     organization = "Unicorp"
 
     workspaces {
-      prefix = "generate_unicorns_"
+      name = "demo-infrastructure"
     }
   }
 }
