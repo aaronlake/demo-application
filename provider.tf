@@ -32,9 +32,4 @@ provider "hcp" {
 
 provider "vault" {
   address = data.tfe_outputs.infrastructure.values.vault_public_endpoint_url
-
-  # auth_login {
-  #   namespace = "admin"
-  #   path      = "auth/userpass/login/${var.login_approle_role_id}"
-  # }
 }
